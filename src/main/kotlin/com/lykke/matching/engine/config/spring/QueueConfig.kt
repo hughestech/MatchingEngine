@@ -24,9 +24,10 @@ open class QueueConfig {
     @Autowired
     private lateinit var config: Config
 
+    //<editor-fold desc="Rabbit MQ queues">
     @Bean
     open fun clientsEventsQueue(): BlockingDeque<Event<*>> {
-        return LinkedBlockingDeque()
+        return LinkedBlockingDeque<Event<*>>()
     }
 
     @Bean
@@ -42,16 +43,6 @@ open class QueueConfig {
     @Bean
     open fun clientLimitOrdersQueue(): BlockingDeque<LimitOrdersReport> {
         return LinkedBlockingDeque<LimitOrdersReport>()
-    }
-
-    @Bean
-    open fun lkkTradesQueue(): BlockingQueue<List<LkkTrade>> {
-        return LinkedBlockingQueue<List<LkkTrade>>()
-    }
-
-    @Bean
-    open fun orderBookQueue(): BlockingQueue<OrderBook> {
-        return LinkedBlockingQueue<OrderBook>()
     }
 
     @Bean
@@ -80,20 +71,13 @@ open class QueueConfig {
     }
 
     @Bean
-    open fun trustedClientsLimitOrdersQueue(): BlockingQueue<LimitOrdersReport> {
-        return LinkedBlockingQueue<LimitOrdersReport>()
+    open fun trustedClientsLimitOrdersQueue(): BlockingDeque<LimitOrdersReport> {
+        return LinkedBlockingDeque<LimitOrdersReport>()
     }
+    //</editor-fold>
 
-    @Bean
-    open fun tradeInfoQueue(): BlockingQueue<TradeInfo> {
-        return LinkedBlockingQueue<TradeInfo>()
-    }
 
-    @Bean
-    open fun dbTransferOperationQueue(): BlockingQueue<TransferOperation> {
-        return LinkedBlockingQueue<TransferOperation>()
-    }
-
+    //<editor-fold desc="Input queues">
     @Bean
     @InputQueue
     open fun limitOrderInputQueue(): BlockingQueue<MessageWrapper> {
@@ -129,6 +113,24 @@ open class QueueConfig {
     open fun cashTransferInputQueue(): BlockingQueue<MessageWrapper> {
         return LinkedBlockingQueue<MessageWrapper>()
     }
+    //</editor-fold>
+
+
+    //<editor-fold desc="Etc queues">
+    @Bean
+    open fun orderBookQueue(): BlockingQueue<OrderBook> {
+        return LinkedBlockingQueue<OrderBook>()
+    }
+
+    @Bean
+    open fun tradeInfoQueue(): BlockingQueue<TradeInfo> {
+        return LinkedBlockingQueue<TradeInfo>()
+    }
+
+    @Bean
+    open fun dbTransferOperationQueue(): BlockingQueue<TransferOperation> {
+        return LinkedBlockingQueue<TransferOperation>()
+    }
 
     @Bean
     open fun updatedOrderBooksQueue(): BlockingQueue<OrderBookPersistEvent>? {
@@ -144,4 +146,10 @@ open class QueueConfig {
     open fun updatedWalletsQueue(): BlockingQueue<AccountPersistEvent>? {
         return LinkedBlockingQueue<AccountPersistEvent>()
     }
+
+    @Bean
+    open fun lkkTradesQueue(): BlockingQueue<List<LkkTrade>> {
+        return LinkedBlockingQueue<List<LkkTrade>>()
+    }
+    //</editor-fold>
 }
