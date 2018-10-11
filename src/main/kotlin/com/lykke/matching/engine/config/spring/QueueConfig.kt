@@ -27,7 +27,7 @@ open class QueueConfig {
     //<editor-fold desc="Rabbit MQ queues">
     @Bean
     open fun clientsEventsQueue(): BlockingDeque<Event<*>> {
-        return LinkedBlockingDeque()
+        return LinkedBlockingDeque<Event<*>>()
     }
 
     @Bean
