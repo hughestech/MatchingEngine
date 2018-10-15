@@ -98,4 +98,8 @@ class Connection(val socket: Socket,
     fun isClosed() : Boolean {
         return socket.isClosed
     }
+
+    override fun toString(): String {
+        return "Client handler, (clientHostName: $clientHostName)"
+    }
 }
