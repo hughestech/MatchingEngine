@@ -43,25 +43,27 @@ class OrderBooksSubscribersSocketServer(val config: Config,
         val socket = ServerSocket(port!!)
         LOGGER.info("Waiting connection on port: $port.")
         try {
-
             while (true) {
-                val clientConnection = socket.accept()
-                val connection = Connection(clientConnection, LinkedBlockingQueue<OrderBook>(),
-                        genericLimitOrderService.getAllOrderBooks(), assetsHolder, assetsPairsHolder)
-                try {
-                    orderBookSubscribersThreadPool.get().submit(connection)
-                } catch (e: RejectedExecutionException) {
-                    logPoolRejection(connection)
-                    closeClientConnection(clientConnection)
-                    return
-                }
-                connectionsHolder.addConnection(connection)
+                submitClientConnection(socket.accept())
             }
         } catch (exception: Exception) {
             LOGGER.error("Got exception: ", exception)
         } finally {
             socket.close()
         }
+    }
+
+    private fun submitClientConnection(clientConnection: Socket) {
+        val connection = Connection(clientConnection, LinkedBlockingQueue<OrderBook>(),
+                genericLimitOrderService.getAllOrderBooks(), assetsHolder, assetsPairsHolder)
+        try {
+            orderBookSubscribersThreadPool.get().submit(connection)
+        } catch (e: RejectedExecutionException) {
+            logPoolRejection(connection)
+            closeClientConnection(clientConnection)
+            return
+        }
+        connectionsHolder.addConnection(connection)
     }
 
     fun logPoolRejection(rejectedConnection: Connection) {
